@@ -1,14 +1,16 @@
 import './App.css';
 import { Route, Router, Routes } from 'react-router-dom';
-import Home from './uilitility/home/home';
-import Login from './component/login/login';
+import HomeComponent from './uilitility/home/homeComponent';
+import LoginComponent from './component/loginComponent/login.component';
+import SignUpComponent from './component/signup/signup.component';
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path={'/'} element={<Home />}></Route>
-          <Route element={<Login />} path='/login'></Route>
+        <Route path={'/'} element={<HomeComponent />}></Route>
+        <Route element={<LoginComponent />} path='/login'></Route>
+        <Route element={<SignUpComponent />} path='/signUp'></Route>
       </Routes>
     </div>
   );

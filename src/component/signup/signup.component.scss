@@ -1,0 +1,43 @@
+.signUp {
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(245, 222, 179, 0.1);
+    .signUp_content {
+        width: 100%;
+        height: calc(100% - 70px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        .signUp-container {
+            width: 900px;
+            height: 550px;
+            box-shadow: 10px 10px 5px rgba(0, 0, 0, .1);
+            border-radius: 50x;
+            background-color: white;
+            display: flex;
+            .signUp-img {
+                height: 100%;
+                width: 60%;
+                background-image: url('../../assets/images/lofi-signup-backgrouns.png');
+                background-size: cover;
+                background-position: center;
+            }
+            .signUp-form {
+                height: 100%;
+                width: 40%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                form {
+                    width: 95%;
+                    border-radius: 30px;
+                    .operation-btn {
+                        margin-top: 20px;
+                    }
+                }
+            }
+        }
+    }
+}
