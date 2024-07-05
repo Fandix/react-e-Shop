@@ -5,6 +5,16 @@
   a {
     color: white !important;
   }
+
+  .link-container {
+    a {
+      margin-right: 20px;
+    }
+    .logout_btn {
+      color: white;
+      cursor: pointer;
+    }
+  }
   
   .collapse {
     justify-content: end;

@@ -5,21 +5,28 @@ import { Form, Button } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { register } from "../../store/slices/auth";
 import { AppDispatch } from '../../store';
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpComponent() {
   const [inputEmail, setInputEmail] = useState('');
   const [inputPassword, setInputPassword] = useState('');
+  const [inputName, setInputName] = useState('');
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const signUpInfo: { email: string; password: string } = {
+    const signUpInfo: { name: string; email: string; password: string } = {
+      name: inputName,
       email: inputEmail,
       password: inputPassword
     };
 
     try {
       const result = await dispatch(register(signUpInfo)).unwrap();
+      if (result === 200) {
+        navigate('/login');
+      }
       console.log(result);
     } catch (error) {
       console.error(error);
@@ -36,6 +43,16 @@ export default function SignUpComponent() {
             <Form className="shadow p-4 bg-white rounded" onSubmit={handleSubmit}>
               <div className="h4 mb-2 text-center">SignUp</div>
               <Form.Group className="mb-2" controlId="username">
+                <Form.Label>User Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={inputName}
+                  placeholder="Name"
+                  onChange={(e) => setInputName(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="mb-2" controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="text"

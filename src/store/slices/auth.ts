@@ -5,11 +5,13 @@ const initialState = { isLoggedIn: false, user: null }
 
 export const register = createAsyncThunk(
   'auth/register',
-  async ({ email, password }: { email: string; password: string }) => {
+  async ({ name, email, password }: { name: string; email: string; password: string }) => {
     try {
-      console.log(email, password);
-      const response = await axios.post('http://localhost:3001/register', { email, password });
-      console.log(response);
+      const user =  { name, email, password }
+      const response = await axios.post('http://localhost:3001/signup', { user });
+      if (response.status === 200) {
+        return response.status;
+      }
     } catch (error) {
       const message =
         (error.response &&
@@ -24,12 +26,34 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (email, password) => {
+  async ({ email, password }: { email: string; password: string }): Promise<string> => {
     try {
-      const response = await axios.post('http://localhost:3001/login', { email, password });
-      console.log(response);
-      // Store JWT to local_storage
-      // TODO
+      const user = { email, password };
+      const response = await axios.post('http://localhost:3001/login', { user });
+      if (response.status === 200) {
+        return response.headers.authorization
+      }
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+        throw message;
+    }
+  }
+)
+
+export const logout = createAsyncThunk(
+  'auth/logout',
+  async(jwt: string) => {
+    try {
+      const headers =  { Authorization: jwt };
+      const response = await axios.delete('http://localhost:3001/logout', { headers });
+      if (response.status === 200) {
+        return response.data;
+      }
     } catch (error) {
       const message =
         (error.response &&
@@ -56,9 +80,12 @@ const userSlice = createSlice({
     })
     builder.addCase(login.fulfilled, (state, action) => {
       state.isLoggedIn = true;
-      state.user = null; // TODO
+      state.user = action.payload;
     })
     builder.addCase(login.rejected, (state, action) => {
+      state.isLoggedIn = false;
+    })
+    builder.addCase(logout.fulfilled, (state, action) => {
       state.isLoggedIn = false;
     })
   }

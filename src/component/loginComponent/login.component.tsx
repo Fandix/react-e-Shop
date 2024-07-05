@@ -1,14 +1,35 @@
 import { useState } from "react";
 import HeaderComponent from "../../uilitility/HeaderComponent/HeaderComponent";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import './login.component.scss';
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store";
+import { login } from "../../store/slices/auth";
+import { Link, useNavigate } from "react-router-dom";
 
 function LoginComponent() {
-  const [inputUsername, setInputUsername] = useState('');
+  const [inputEmail, setInputEmail] = useState('');
   const [inputPassword, setInputPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
-  const handleSubmit = () => { }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const loginInfo: { email: string; password: string } = {
+      email: inputEmail,
+      password: inputPassword
+    };
+    try {
+      setLoading(true);
+      const result = await dispatch(login(loginInfo)).unwrap();
+      localStorage.setItem("JWT", result);
+      navigate('/');
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
+    }
+  }
 
   return (
     <div className="login">
@@ -22,9 +43,9 @@ function LoginComponent() {
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="text"
-                  value={inputUsername}
+                  value={inputEmail}
                   placeholder="Email"
-                  onChange={(e) => setInputUsername(e.target.value)}
+                  onChange={(e) => setInputEmail(e.target.value)}
                   required
                 />
               </Form.Group>
@@ -50,7 +71,7 @@ function LoginComponent() {
               )}
 
               <div className="signUp-content">
-                <a href="/signUp">Create Your Account</a>
+                <Link to="/signUp">Create Your Account</Link>
               </div>
             </Form>
           </div>
